@@ -18,32 +18,71 @@ defmodule Day03 do
   def run2() do
     input = input2()
 
-    freq_template =
-      input
-      |> Enum.zip()
-      |> Enum.map(fn tuple -> Tuple.to_list(tuple) end)
-      |> Enum.map(fn tuple -> Enum.frequencies(tuple) end)
-      |> Enum.map(fn %{0 => x, 1 => y} ->
-        if x > y do
-          0
-        else
-          1
-        end
-      end)
-
-    filter(input, freq_template, 0)
+    [oxy] = filter(input, freq(input, "oxy"), 0, "oxy")
+    [co2] = filter(input, freq(input, "co2"), 0, "co2")
+    oxy = Enum.join(oxy) |> String.to_integer(2) |> IO.inspect()
+    co2 = Enum.join(co2) |> String.to_integer(2) |> IO.inspect()
+    oxy * co2
   end
 
-  defp filter(list, _, _) when length(list) < 2, do: list
+  defp freq(input, source) do
+    Enum.zip(input)
+    |> Enum.map(fn tuple -> Tuple.to_list(tuple) end)
+    |> Enum.map(fn tuple -> Enum.frequencies(tuple) end)
+    |> source(source)
+  end
 
-  defp filter(input, freq_template, start) do
-    Enum.filter(input, fn x ->
-      Enum.at(x, start) ==
-        Enum.at(freq_template, start)
+  defp source(list, "oxy") do
+    Enum.map(list, fn freq ->
+      case freq do
+        %{"0" => x, "1" => y} ->
+          if y >= x do
+            "1"
+          else
+            "0"
+          end
+
+        %{"0" => x} ->
+          "0"
+
+        %{"1" => x} ->
+          "1"
+      end
     end)
-    |> filter(freq_template, start + 1)
+  end
 
-    # ^^ failing left to right filter candidate expected values already filtered out
+  defp source(list, "co2") do
+    Enum.map(list, fn freq ->
+      case freq do
+        %{"0" => x, "1" => y} ->
+          if x <= y do
+            "0"
+          else
+            "1"
+          end
+
+        %{"0" => x} ->
+          "1"
+
+        %{"1" => x} ->
+          "0"
+      end
+    end)
+  end
+
+  defp filter([], _, _, _), do: "fuu"
+  defp filter(list, _, _, _) when length(list) == 1, do: list |> IO.inspect()
+
+  defp filter(input, freq, start, source) do
+    new_input =
+      Enum.filter(input, fn x ->
+        Enum.at(x, start) ==
+          Enum.at(freq, start)
+      end)
+
+    new_freq = freq(new_input, source)
+
+    filter(new_input, new_freq, start + 1, source)
   end
 
   defp input1() do
@@ -69,7 +108,7 @@ defmodule Day03 do
     |> File.read!()
     |> String.split("\n", trim: true)
     |> Enum.map(fn string ->
-      String.split(string, "", trim: true) |> Enum.map(&String.to_integer/1)
+      String.split(string, "", trim: true)
     end)
   end
 end
