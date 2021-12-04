@@ -42,10 +42,10 @@ defmodule Day03 do
             "0"
           end
 
-        %{"0" => x} ->
+        %{"0" => _x} ->
           "0"
 
-        %{"1" => x} ->
+        %{"1" => _x} ->
           "1"
       end
     end)
@@ -61,17 +61,17 @@ defmodule Day03 do
             "1"
           end
 
-        %{"0" => x} ->
+        %{"0" => _x} ->
           "1"
 
-        %{"1" => x} ->
+        %{"1" => _x} ->
           "0"
       end
     end)
   end
 
   defp filter([], _, _, _), do: "fuu"
-  defp filter(list, _, _, _) when length(list) == 1, do: list |> IO.inspect()
+  defp filter(list, _, _, _) when length(list) == 1, do: list
 
   defp filter(input, freq, start, source) do
     new_input =
