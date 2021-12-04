@@ -20,8 +20,8 @@ defmodule Day03 do
 
     [oxy] = filter(input, freq(input, "oxy"), 0, "oxy")
     [co2] = filter(input, freq(input, "co2"), 0, "co2")
-    oxy = Enum.join(oxy) |> String.to_integer(2) |> IO.inspect()
-    co2 = Enum.join(co2) |> String.to_integer(2) |> IO.inspect()
+    oxy = Enum.join(oxy) |> String.to_integer(2)
+    co2 = Enum.join(co2) |> String.to_integer(2)
     oxy * co2
   end
 
