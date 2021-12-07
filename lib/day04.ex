@@ -15,6 +15,8 @@ defmodule Day04 do
     draw(rest, new_horizon, new_vertical)
   end
 
+  defp draw([], _, _), do: "finished"
+
   defp rotate_board(first, board) do
     board
     |> Enum.map(fn set ->
@@ -23,19 +25,17 @@ defmodule Day04 do
           sum =
             List.flatten(set)
             |> Enum.map(&String.to_integer/1)
-            |> IO.inspect()
             |> Enum.sum()
             |> Kernel.-(String.to_integer(first))
 
-          draw(sum * String.to_integer(first))
+          IO.inspect(sum * String.to_integer(first))
+          List.delete(line, first)
         else
           List.delete(line, first)
         end
       end)
     end)
   end
-
-  defp draw(num), do: raise(num)
 
   defp horizontal_board_gen(boards) do
     boards
